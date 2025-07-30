@@ -9,10 +9,11 @@ app.use(express.json());
 
 // Configuración de la conexión a MySQL
 const db = mysql.createConnection({
-  host: 'localhost',
+  host: '0.0.0.0', // Cambiar a la IP del servidor MySQL o mantener 'localhost' para conexiones locales
   user: 'root',
   password: 'Preventa1',
-  database: 'TiendaRopa'
+  database: 'TiendaRopa',
+  port: 3306 // Puerto por defecto de MySQL
 });
 
 db.connect((err) => {
