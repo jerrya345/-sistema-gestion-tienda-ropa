@@ -471,7 +471,7 @@
         // Dashboard
         async function loadDashboard() {
             try {
-                const response = await fetch(`${API_URL}/resumen`);
+                const response = await fetch(`${API_URL}/api/resumen`);
                 const data = await response.json();
                 
                 document.getElementById('ventasHoy').textContent = `$${data.ventasHoy}`;
@@ -480,7 +480,7 @@
                 document.getElementById('totalProductos').textContent = data.totalProductos;
                 
                 // Cargar últimas ventas
-                const ventasResponse = await fetch(`${API_URL}/ventas/ultimas`);
+                const ventasResponse = await fetch(`${API_URL}/api/ventas/ultimas`);
                 const ventasData = await ventasResponse.json();
                 
                 let ventasHTML = '<table class="table"><thead><tr><th>Cliente</th><th>Fecha</th><th>Total</th></tr></thead><tbody>';

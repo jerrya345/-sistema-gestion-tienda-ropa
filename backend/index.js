@@ -185,7 +185,7 @@ app.post('/detalle_venta', (req, res) => {
 });
 
 // Endpoint para obtener el resumen general
-app.get('/resumen', (req, res) => {
+app.get('/api/resumen', (req, res) => {
   const resumen = {};
   // Ventas de hoy
   db.query("SELECT IFNULL(SUM(total),0) AS ventasHoy FROM ventas WHERE DATE(fecha) = CURDATE()", (err, result1) => {
@@ -211,7 +211,7 @@ app.get('/resumen', (req, res) => {
 });
 
 // Endpoint para obtener las últimas ventas
-app.get('/ventas/ultimas', (req, res) => {
+app.get('/api/ventas/ultimas', (req, res) => {
   const sql = `SELECT v.id, c.nombre AS cliente, v.fecha, v.total FROM ventas v JOIN clientes c ON v.id_cliente = c.id ORDER BY v.fecha DESC, v.id DESC LIMIT 4`;
   db.query(sql, (err, results) => {
     if (err) return res.status(500).json({ error: 'Error al obtener últimas ventas' });
