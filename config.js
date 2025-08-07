@@ -28,7 +28,7 @@ const config = {
     
     // Configuración de la API
     api: {
-        baseUrl: 'http://localhost:3000',
+        baseUrl: 'https://sistema-gestion-tienda-ropa.onrender.com',
         endpoints: {
             productos: '/productos',
             clientes: '/clientes',
