@@ -1,0 +1,302 @@
+{
+  "info": {
+    "name": "API Tienda - Collection",
+    "description": "Colección completa para probar la API de la tienda de ropa",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}{{api_prefix}}/health",
+          "host": ["{{base_url}}"],
+          "path": ["{{api_prefix}}", "health"]
+        },
+        "description": "Verificar el estado de la API"
+      }
+    },
+    {
+      "name": "Productos",
+      "item": [
+        {
+          "name": "Obtener todos los productos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}{{api_prefix}}/productos",
+              "host": ["{{base_url}}"],
+              "path": ["{{api_prefix}}", "productos"]
+            },
+            "description": "Obtener lista de todos los productos disponibles"
+          }
+        },
+        {
+          "name": "Obtener productos por categoría",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}{{api_prefix}}/productos/categoria/{{category_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["{{api_prefix}}", "productos", "categoria", "{{category_id}}"]
+            },
+            "description": "Obtener productos filtrados por categoría"
+          }
+        },
+        {
+          "name": "Obtener productos por marca",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}{{api_prefix}}/productos/marca/{{brand_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["{{api_prefix}}", "productos", "marca", "{{brand_id}}"]
+            },
+            "description": "Obtener productos filtrados por marca"
+          }
+        },
+        {
+          "name": "Obtener productos destacados",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}{{api_prefix}}/productos/destacados",
+              "host": ["{{base_url}}"],
+              "path": ["{{api_prefix}}", "productos", "destacados"]
+            },
+            "description": "Obtener productos destacados"
+          }
+        },
+        {
+          "name": "Buscar productos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}{{api_prefix}}/productos/buscar?q=camiseta",
+              "host": ["{{base_url}}"],
+              "path": ["{{api_prefix}}", "productos", "buscar"],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "camiseta",
+                  "description": "Término de búsqueda"
+                }
+              ]
+            },
+            "description": "Buscar productos por término"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Categorías",
+      "item": [
+        {
+          "name": "Obtener todas las categorías",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}{{api_prefix}}/categorias",
+              "host": ["{{base_url}}"],
+              "path": ["{{api_prefix}}", "categorias"]
+            },
+            "description": "Obtener lista de todas las categorías"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Marcas",
+      "item": [
+        {
+          "name": "Obtener todas las marcas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}{{api_prefix}}/marcas",
+              "host": ["{{base_url}}"],
+              "path": ["{{api_prefix}}", "marcas"]
+            },
+            "description": "Obtener lista de todas las marcas"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Clientes",
+      "item": [
+        {
+          "name": "Registrar nuevo cliente",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "{{content_type}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"{{client_name}}\",\n  \"email\": \"{{client_email}}\",\n  \"telefono\": \"{{client_phone}}\",\n  \"direccion\": \"{{client_address}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}{{api_prefix}}/clientes",
+              "host": ["{{base_url}}"],
+              "path": ["{{api_prefix}}", "clientes"]
+            },
+            "description": "Registrar un nuevo cliente en el sistema"
+          }
+        },
+        {
+          "name": "Obtener cliente por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}{{api_prefix}}/clientes/{{customer_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["{{api_prefix}}", "clientes", "{{customer_id}}"]
+            },
+            "description": "Obtener información de un cliente específico"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Órdenes",
+      "item": [
+        {
+          "name": "Crear nueva orden",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "{{content_type}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cliente_id\": \"{{customer_id}}\",\n  \"productos\": [\n    {\n      \"producto_id\": \"{{product_id}}\",\n      \"cantidad\": 2,\n      \"precio_unitario\": 29.99\n    }\n  ],\n  \"total\": 59.98,\n  \"metodo_pago\": \"tarjeta\",\n  \"direccion_envio\": \"{{client_address}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}{{api_prefix}}/ordenes",
+              "host": ["{{base_url}}"],
+              "path": ["{{api_prefix}}", "ordenes"]
+            },
+            "description": "Crear una nueva orden de compra"
+          }
+        },
+        {
+          "name": "Obtener orden por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}{{api_prefix}}/ordenes/{{order_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["{{api_prefix}}", "ordenes", "{{order_id}}"]
+            },
+            "description": "Obtener información de una orden específica"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Información de la Tienda",
+      "item": [
+        {
+          "name": "Obtener información de la tienda",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}{{api_prefix}}/tienda/info",
+              "host": ["{{base_url}}"],
+              "path": ["{{api_prefix}}", "tienda", "info"]
+            },
+            "description": "Obtener información general de la tienda"
+          }
+        },
+        {
+          "name": "Obtener horarios",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}{{api_prefix}}/tienda/horarios",
+              "host": ["{{base_url}}"],
+              "path": ["{{api_prefix}}", "tienda", "horarios"]
+            },
+            "description": "Obtener horarios de atención de la tienda"
+          }
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Script que se ejecuta antes de cada request",
+          "console.log('Ejecutando request a: ' + pm.request.url);"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Script que se ejecuta después de cada request",
+          "if (pm.response.code === 200) {",
+          "    console.log('✅ Request exitoso');",
+          "} else {",
+          "    console.log('❌ Request falló con código: ' + pm.response.code);",
+          "}",
+          "",
+          "// Guardar IDs dinámicos si están en la respuesta",
+          "if (pm.response.json().cliente_id) {",
+          "    pm.environment.set('customer_id', pm.response.json().cliente_id);",
+          "}",
+          "if (pm.response.json().orden_id) {",
+          "    pm.environment.set('order_id', pm.response.json().orden_id);",
+          "}"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3001",
+      "type": "string"
+    },
+    {
+      "key": "api_prefix",
+      "value": "/api",
+      "type": "string"
+    }
+  ]
+} 

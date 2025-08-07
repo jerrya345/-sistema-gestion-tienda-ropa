@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧪 Probador de API - Tienda</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #fff;
+        }
+        .endpoint {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+            border-left: 4px solid #4CAF50;
+        }
+        .method {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .get { background: #4CAF50; }
+        .post { background: #FF9800; }
+        button {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+        }
+        button:hover {
+            background: #1976D2;
+        }
+        .result {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border: none;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.9);
+        }
+        .form-group {
+            margin: 10px 0;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Probador de API - Tienda</h1>
+        
+        <div class="endpoint">
+            <span class="method get">GET</span>
+            <strong>/api/health</strong>
+            <button onclick="testHealth()">Probar</button>
+            <div id="health-result" class="result" style="display: none;"></div>
+        </div>
+
+        <div class="endpoint">
+            <span class="method get">GET</span>
+            <strong>/api/productos</strong>
+            <button onclick="testProductos()">Probar</button>
+            <div id="productos-result" class="result" style="display: none;"></div>
+        </div>
+
+        <div class="endpoint">
+            <span class="method get">GET</span>
+            <strong>/api/categorias</strong>
+            <button onclick="testCategorias()">Probar</button>
+            <div id="categorias-result" class="result" style="display: none;"></div>
+        </div>
+
+        <div class="endpoint">
+            <span class="method get">GET</span>
+            <strong>/api/marcas</strong>
+            <button onclick="testMarcas()">Probar</button>
+            <div id="marcas-result" class="result" style="display: none;"></div>
+        </div>
+
+        <div class="endpoint">
+            <span class="method post">POST</span>
+            <strong>/api/clientes</strong>
+            <div class="form-group">
+                <label>Nombre:</label>
+                <input type="text" id="nombre" value="Juan Pérez" placeholder="Nombre del cliente">
+            </div>
+            <div class="form-group">
+                <label>Email:</label>
+                <input type="email" id="email" value="juan@ejemplo.com" placeholder="Email del cliente">
+            </div>
+            <div class="form-group">
+                <label>Teléfono:</label>
+                <input type="text" id="telefono" value="123456789" placeholder="Teléfono">
+            </div>
+            <div class="form-group">
+                <label>Dirección:</label>
+                <input type="text" id="direccion" value="Calle Principal 123" placeholder="Dirección">
+            </div>
+            <button onclick="testRegistrarCliente()">Registrar Cliente</button>
+            <div id="cliente-result" class="result" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:3001';
+
+        async function makeRequest(url, method = 'GET', body = null) {
+            try {
+                const options = {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                };
+                
+                if (body) {
+                    options.body = JSON.stringify(body);
+                }
+
+                const response = await fetch(url, options);
+                const data = await response.json();
+                
+                return {
+                    success: response.ok,
+                    status: response.status,
+                    data: data
+                };
+            } catch (error) {
+                return {
+                    success: false,
+                    error: error.message
+                };
+            }
+        }
+
+        function showResult(elementId, result) {
+            const element = document.getElementById(elementId);
+            element.style.display = 'block';
+            element.textContent = JSON.stringify(result, null, 2);
+        }
+
+        async function testHealth() {
+            const result = await makeRequest(`${API_BASE}/api/health`);
+            showResult('health-result', result);
+        }
+
+        async function testProductos() {
+            const result = await makeRequest(`${API_BASE}/api/productos`);
+            showResult('productos-result', result);
+        }
+
+        async function testCategorias() {
+            const result = await makeRequest(`${API_BASE}/api/categorias`);
+            showResult('categorias-result', result);
+        }
+
+        async function testMarcas() {
+            const result = await makeRequest(`${API_BASE}/api/marcas`);
+            showResult('marcas-result', result);
+        }
+
+        async function testRegistrarCliente() {
+            const clienteData = {
+                nombre: document.getElementById('nombre').value,
+                email: document.getElementById('email').value,
+                telefono: document.getElementById('telefono').value,
+                direccion: document.getElementById('direccion').value
+            };
+
+            const result = await makeRequest(`${API_BASE}/api/clientes`, 'POST', clienteData);
+            showResult('cliente-result', result);
+        }
+    </script>
+</body>
+</html> 

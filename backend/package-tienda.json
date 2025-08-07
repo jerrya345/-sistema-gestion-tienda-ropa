@@ -1,7 +1,7 @@
 {
   "name": "api-tienda-boutique",
   "version": "1.0.0",
-  "description": "API para tienda de ropa boutique",
+  "description": "API pública para la tienda web de Boutique Avilés Cruz",
   "main": "api-tienda.js",
   "scripts": {
     "start": "node api-tienda.js",
@@ -13,24 +13,25 @@
     "tienda",
     "ropa",
     "boutique",
+    "express",
     "mysql",
-    "express"
+    "rest"
   ],
-  "author": "Sistema de Gestión Tienda",
+  "author": "Boutique Avilés Cruz",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.18.2",
-    "mysql2": "^3.6.0",
-    "cors": "^2.8.5"
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "mysql2": "^3.14.3"
   },
   "devDependencies": {
-    "nodemon": "^3.0.1"
+    "nodemon": "^3.0.2"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=14.0.0"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/jerrya345/-sistema-gestion-tienda-ropa.git"
   }
-}
+} 

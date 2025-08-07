@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: api-tienda-boutique
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node api-tienda.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: DB_HOST
+        value: your-mysql-host
+      - key: DB_USER
+        value: your-mysql-user
+      - key: DB_PASSWORD
+        value: your-mysql-password
+      - key: DB_NAME
+        value: your-mysql-database
+      - key: DB_PORT
+        value: 3306 
