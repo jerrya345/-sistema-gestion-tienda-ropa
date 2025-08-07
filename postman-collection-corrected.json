@@ -1,0 +1,461 @@
+{
+  "info": {
+    "name": "API Tienda - Collection (CORRECTED)",
+    "description": "Colección completa para probar la API de tienda con interfaz integrada",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "🏠 Interfaz Web",
+      "item": [
+        {
+          "name": "GET Interfaz Principal",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/",
+              "host": ["{{base_url}}"],
+              "path": [""]
+            }
+          }
+        },
+        {
+          "name": "GET Documentación",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/docs",
+              "host": ["{{base_url}}"],
+              "path": ["docs"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🧪 Test & Health",
+      "item": [
+        {
+          "name": "GET Test API",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/test",
+              "host": ["{{base_url}}"],
+              "path": ["api", "test"]
+            }
+          }
+        },
+        {
+          "name": "GET Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/health",
+              "host": ["{{base_url}}"],
+              "path": ["api", "health"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "👕 Productos (Públicos)",
+      "item": [
+        {
+          "name": "GET Todos los Productos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/productos",
+              "host": ["{{base_url}}"],
+              "path": ["productos"]
+            }
+          }
+        },
+        {
+          "name": "GET Productos por Categoría",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/productos/categoria/{{category_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["productos", "categoria", "{{category_id}}"]
+            }
+          }
+        },
+        {
+          "name": "GET Productos por Marca",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/productos/marca/Nike",
+              "host": ["{{base_url}}"],
+              "path": ["productos", "marca", "Nike"]
+            }
+          }
+        },
+        {
+          "name": "GET Categorías",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/categorias",
+              "host": ["{{base_url}}"],
+              "path": ["categorias"]
+            }
+          }
+        },
+        {
+          "name": "GET Marcas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/marcas",
+              "host": ["{{base_url}}"],
+              "path": ["marcas"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "👥 Clientes (Públicos)",
+      "item": [
+        {
+          "name": "POST Registrar Cliente",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"Nombre\": \"{{client_name}}\",\n  \"Telefono\": \"1234567890\",\n  \"Correo\": \"cliente@test.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/clientes",
+              "host": ["{{base_url}}"],
+              "path": ["clientes"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "💰 Órdenes (Públicos)",
+      "item": [
+        {
+          "name": "POST Crear Orden",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ID_Cliente\": {{customer_id}},\n  \"Total\": 150.00,\n  \"Productos\": [\n    {\n      \"ID_Producto\": {{product_id}},\n      \"Cantidad\": 2,\n      \"Precio\": 75.00\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/ordenes",
+              "host": ["{{base_url}}"],
+              "path": ["ordenes"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "👥 Clientes (Admin)",
+      "item": [
+        {
+          "name": "GET Todos los Clientes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/{{admin_prefix}}/clientes",
+              "host": ["{{base_url}}"],
+              "path": ["{{admin_prefix}}", "clientes"]
+            }
+          }
+        },
+        {
+          "name": "GET Cliente por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/{{admin_prefix}}/clientes/{{customer_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["{{admin_prefix}}", "clientes", "{{customer_id}}"]
+            }
+          }
+        },
+        {
+          "name": "POST Registrar Cliente (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"Nombre\": \"Cliente Admin\",\n  \"Telefono\": \"9876543210\",\n  \"Correo\": \"admin@test.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/{{admin_prefix}}/clientes",
+              "host": ["{{base_url}}"],
+              "path": ["{{admin_prefix}}", "clientes"]
+            }
+          }
+        },
+        {
+          "name": "DELETE Eliminar Cliente",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/{{admin_prefix}}/clientes/{{customer_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["{{admin_prefix}}", "clientes", "{{customer_id}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "👕 Productos (Admin)",
+      "item": [
+        {
+          "name": "GET Todos los Productos (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/{{admin_prefix}}/productos/admin",
+              "host": ["{{base_url}}"],
+              "path": ["{{admin_prefix}}", "productos", "admin"]
+            }
+          }
+        },
+        {
+          "name": "POST Registrar Producto",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"Nombre\": \"Camisa Test\",\n  \"Descripcion\": \"Camisa de prueba\",\n  \"Talla\": \"M\",\n  \"Color\": \"Azul\",\n  \"Precio\": 50.00,\n  \"Marca\": \"Test Brand\",\n  \"Tipo_Prenda\": \"Camisa\",\n  \"Temporada\": \"Verano\",\n  \"Stock\": 10,\n  \"ID_Proveedor\": 1,\n  \"ID_Categoria\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/{{admin_prefix}}/productos",
+              "host": ["{{base_url}}"],
+              "path": ["{{admin_prefix}}", "productos"]
+            }
+          }
+        },
+        {
+          "name": "DELETE Eliminar Producto",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/{{admin_prefix}}/productos/{{product_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["{{admin_prefix}}", "productos", "{{product_id}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🏭 Proveedores (Admin)",
+      "item": [
+        {
+          "name": "GET Todos los Proveedores",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/{{admin_prefix}}/proveedores",
+              "host": ["{{base_url}}"],
+              "path": ["{{admin_prefix}}", "proveedores"]
+            }
+          }
+        },
+        {
+          "name": "GET Proveedor por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/{{admin_prefix}}/proveedores/1",
+              "host": ["{{base_url}}"],
+              "path": ["{{admin_prefix}}", "proveedores", "1"]
+            }
+          }
+        },
+        {
+          "name": "POST Registrar Proveedor",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"Nombre\": \"Proveedor Test\",\n  \"Telefono\": \"5551234567\",\n  \"Correo\": \"proveedor@test.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/{{admin_prefix}}/proveedores",
+              "host": ["{{base_url}}"],
+              "path": ["{{admin_prefix}}", "proveedores"]
+            }
+          }
+        },
+        {
+          "name": "DELETE Eliminar Proveedor",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/{{admin_prefix}}/proveedores/1",
+              "host": ["{{base_url}}"],
+              "path": ["{{admin_prefix}}", "proveedores", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "💰 Ventas (Admin)",
+      "item": [
+        {
+          "name": "GET Todas las Ventas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/{{admin_prefix}}/ventas",
+              "host": ["{{base_url}}"],
+              "path": ["{{admin_prefix}}", "ventas"]
+            }
+          }
+        },
+        {
+          "name": "GET Venta por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/{{admin_prefix}}/ventas/{{order_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["{{admin_prefix}}", "ventas", "{{order_id}}"]
+            }
+          }
+        },
+        {
+          "name": "POST Registrar Venta",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ID_Cliente\": {{customer_id}},\n  \"Total\": 200.00\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/{{admin_prefix}}/ventas",
+              "host": ["{{base_url}}"],
+              "path": ["{{admin_prefix}}", "ventas"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "📊 Estadísticas (Admin)",
+      "item": [
+        {
+          "name": "GET Estadísticas Dashboard",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/{{admin_prefix}}/estadisticas",
+              "host": ["{{base_url}}"],
+              "path": ["{{admin_prefix}}", "estadisticas"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Script de pre-request para validar variables",
+          "if (!pm.environment.get('base_url')) {",
+          "    console.error('Error: base_url no está configurada');",
+          "}"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Script de test para validar respuestas",
+          "pm.test('Status code is 200', function () {",
+          "    pm.response.to.have.status(200);",
+          "});",
+          "",
+          "pm.test('Response time is less than 5000ms', function () {",
+          "    pm.expect(pm.response.responseTime).to.be.below(5000);",
+          "});"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://sistema-gestion-tienda-ropa.onrender.com"
+    }
+  ]
+} 
