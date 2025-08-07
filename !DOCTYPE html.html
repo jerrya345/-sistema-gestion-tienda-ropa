@@ -268,6 +268,39 @@
                 </div>
             </div>
             
+            <h3>🔍 Búsqueda Rápida</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 30px;">
+                <!-- Búsqueda de Cliente -->
+                <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                    <h4>👥 Buscar Cliente</h4>
+                    <div class="form-group">
+                        <input type="number" id="buscarClienteId" placeholder="Ingresa ID del cliente" style="margin-bottom: 10px;">
+                        <button class="btn btn-primary" onclick="buscarCliente()">🔍 Buscar</button>
+                    </div>
+                    <div id="resultadoCliente" style="margin-top: 10px;"></div>
+                </div>
+                
+                <!-- Búsqueda de Proveedor -->
+                <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                    <h4>🏭 Buscar Proveedor</h4>
+                    <div class="form-group">
+                        <input type="number" id="buscarProveedorId" placeholder="Ingresa ID del proveedor" style="margin-bottom: 10px;">
+                        <button class="btn btn-primary" onclick="buscarProveedor()">🔍 Buscar</button>
+                    </div>
+                    <div id="resultadoProveedor" style="margin-top: 10px;"></div>
+                </div>
+                
+                <!-- Búsqueda de Venta -->
+                <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                    <h4>💰 Buscar Venta</h4>
+                    <div class="form-group">
+                        <input type="number" id="buscarVentaId" placeholder="Ingresa ID de la venta" style="margin-bottom: 10px;">
+                        <button class="btn btn-primary" onclick="buscarVenta()">🔍 Buscar</button>
+                    </div>
+                    <div id="resultadoVenta" style="margin-top: 10px;"></div>
+                </div>
+            </div>
+            
             <h3>🔄 Últimas Ventas</h3>
             <div id="ultimasVentas" class="loading">Cargando...</div>
         </div>
@@ -403,10 +436,6 @@
                     <input type="number" id="ventaCliente" required>
                 </div>
                 <div class="form-group">
-                    <label for="ventaFecha">Fecha:</label>
-                    <input type="date" id="ventaFecha" required>
-                </div>
-                <div class="form-group">
                     <label for="ventaTotal">Total:</label>
                     <input type="number" id="ventaTotal" step="0.01" required>
                 </div>
@@ -471,21 +500,25 @@
         // Dashboard
         async function loadDashboard() {
             try {
-                const response = await fetch(`${API_URL}/api/resumen`);
+                // Usar el endpoint de estadísticas que usa Stored Procedures
+                const response = await fetch(`${API_URL}/estadisticas`);
                 const data = await response.json();
                 
-                document.getElementById('ventasHoy').textContent = `$${data.ventasHoy}`;
-                document.getElementById('ventasMes').textContent = `$${data.ventasMes}`;
-                document.getElementById('totalClientes').textContent = data.totalClientes;
-                document.getElementById('totalProductos').textContent = data.totalProductos;
+                document.getElementById('ventasHoy').textContent = `$${data.totalIngresos || 0}`;
+                document.getElementById('ventasMes').textContent = `$${data.totalIngresos || 0}`;
+                document.getElementById('totalClientes').textContent = data.totalClientes || 0;
+                document.getElementById('totalProductos').textContent = data.totalProductos || 0;
                 
                 // Cargar últimas ventas
-                const ventasResponse = await fetch(`${API_URL}/api/ventas/ultimas`);
+                const ventasResponse = await fetch(`${API_URL}/ventas`);
                 const ventasData = await ventasResponse.json();
                 
-                let ventasHTML = '<table class="table"><thead><tr><th>Cliente</th><th>Fecha</th><th>Total</th></tr></thead><tbody>';
-                ventasData.forEach(venta => {
-                    ventasHTML += `<tr><td>${venta.cliente}</td><td>${new Date(venta.fecha).toLocaleDateString()}</td><td>$${venta.total}</td></tr>`;
+                let ventasHTML = '<table class="table"><thead><tr><th>ID Venta</th><th>Fecha</th><th>Total</th><th>ID Cliente</th></tr></thead><tbody>';
+                ventasData.slice(0, 5).forEach(venta => {
+                    const fecha = new Date(venta.Fecha);
+                    const fechaFormateada = fecha.toLocaleDateString('es-ES');
+                    const total = parseFloat(venta.Total).toFixed(2);
+                    ventasHTML += `<tr><td>${venta.ID_Venta}</td><td>${fechaFormateada}</td><td>$${total}</td><td>${venta.ID_Cliente}</td></tr>`;
                 });
                 ventasHTML += '</tbody></table>';
                 
@@ -677,6 +710,7 @@
             };
             
             try {
+                console.log('🔄 Enviando cliente a Stored Procedure...');
                 const response = await fetch(`${API_URL}/clientes`, {
                     method: 'POST',
                     headers: {
@@ -686,9 +720,11 @@
                 });
                 
                 if (response.ok) {
-                    showAlert('Cliente registrado exitosamente');
+                    const result = await response.json();
+                    showAlert(`✅ Cliente registrado exitosamente (ID: ${result.id})`);
                     document.getElementById('clienteForm').reset();
                     loadClientes();
+                    loadDashboard(); // Actualizar estadísticas
                 } else {
                     const error = await response.json();
                     showAlert(`Error: ${error.error}`, 'danger');
@@ -716,6 +752,7 @@
             };
             
             try {
+                console.log('🔄 Enviando producto a Stored Procedure...');
                 const response = await fetch(`${API_URL}/productos`, {
                     method: 'POST',
                     headers: {
@@ -725,9 +762,11 @@
                 });
                 
                 if (response.ok) {
-                    showAlert('Producto registrado exitosamente');
+                    const result = await response.json();
+                    showAlert(`✅ Producto registrado exitosamente (ID: ${result.id})`);
                     document.getElementById('productoForm').reset();
                     loadProductos();
+                    loadDashboard(); // Actualizar estadísticas
                 } else {
                     const error = await response.json();
                     showAlert(`Error: ${error.error}`, 'danger');
@@ -775,11 +814,11 @@
             
             const formData = {
                 ID_Cliente: parseInt(document.getElementById('ventaCliente').value),
-                Fecha: document.getElementById('ventaFecha').value,
                 Total: parseFloat(document.getElementById('ventaTotal').value)
             };
             
             try {
+                console.log('🔄 Enviando venta a Stored Procedure...');
                 const response = await fetch(`${API_URL}/ventas`, {
                     method: 'POST',
                     headers: {
@@ -789,9 +828,11 @@
                 });
                 
                 if (response.ok) {
-                    showAlert('Venta registrada exitosamente');
+                    const result = await response.json();
+                    showAlert(`✅ Venta registrada exitosamente (ID: ${result.id})`);
                     document.getElementById('ventaForm').reset();
                     loadVentas();
+                    loadDashboard(); // Actualizar estadísticas
                 } else {
                     const error = await response.json();
                     showAlert(`Error: ${error.error}`, 'danger');
@@ -801,6 +842,116 @@
                 showAlert('Error al registrar venta', 'danger');
             }
         });
+
+        // Funciones de búsqueda
+        async function buscarCliente() {
+            const id = document.getElementById('buscarClienteId').value;
+            if (!id) {
+                showAlert('Por favor ingresa un ID de cliente', 'danger');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_URL}/clientes/${id}`);
+                const resultado = document.getElementById('resultadoCliente');
+                
+                if (response.ok) {
+                    const cliente = await response.json();
+                    resultado.innerHTML = `
+                        <div style="background: #d4edda; padding: 15px; border-radius: 8px; border: 1px solid #c3e6cb;">
+                            <h5 style="color: #155724; margin-bottom: 10px;">✅ Cliente Encontrado</h5>
+                            <p><strong>ID:</strong> ${cliente.ID_Cliente}</p>
+                            <p><strong>Nombre:</strong> ${cliente.Nombre}</p>
+                            <p><strong>Teléfono:</strong> ${cliente.Telefono}</p>
+                            <p><strong>Correo:</strong> ${cliente.Correo}</p>
+                        </div>
+                    `;
+                } else {
+                    resultado.innerHTML = `
+                        <div style="background: #f8d7da; padding: 15px; border-radius: 8px; border: 1px solid #f5c6cb;">
+                            <h5 style="color: #721c24; margin-bottom: 10px;">❌ Cliente No Encontrado</h5>
+                            <p>No se encontró un cliente con el ID ${id}</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error buscando cliente:', error);
+                showAlert('Error al buscar cliente', 'danger');
+            }
+        }
+
+        async function buscarProveedor() {
+            const id = document.getElementById('buscarProveedorId').value;
+            if (!id) {
+                showAlert('Por favor ingresa un ID de proveedor', 'danger');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_URL}/proveedores/${id}`);
+                const resultado = document.getElementById('resultadoProveedor');
+                
+                if (response.ok) {
+                    const proveedor = await response.json();
+                    resultado.innerHTML = `
+                        <div style="background: #d4edda; padding: 15px; border-radius: 8px; border: 1px solid #c3e6cb;">
+                            <h5 style="color: #155724; margin-bottom: 10px;">✅ Proveedor Encontrado</h5>
+                            <p><strong>ID:</strong> ${proveedor.ID_Proveedor}</p>
+                            <p><strong>Nombre:</strong> ${proveedor.Nombre}</p>
+                            <p><strong>Teléfono:</strong> ${proveedor.Telefono}</p>
+                            <p><strong>Correo:</strong> ${proveedor.Correo}</p>
+                        </div>
+                    `;
+                } else {
+                    resultado.innerHTML = `
+                        <div style="background: #f8d7da; padding: 15px; border-radius: 8px; border: 1px solid #f5c6cb;">
+                            <h5 style="color: #721c24; margin-bottom: 10px;">❌ Proveedor No Encontrado</h5>
+                            <p>No se encontró un proveedor con el ID ${id}</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error buscando proveedor:', error);
+                showAlert('Error al buscar proveedor', 'danger');
+            }
+        }
+
+        async function buscarVenta() {
+            const id = document.getElementById('buscarVentaId').value;
+            if (!id) {
+                showAlert('Por favor ingresa un ID de venta', 'danger');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_URL}/ventas/${id}`);
+                const resultado = document.getElementById('resultadoVenta');
+                
+                if (response.ok) {
+                    const venta = await response.json();
+                    const fecha = new Date(venta.Fecha).toLocaleDateString('es-ES');
+                    resultado.innerHTML = `
+                        <div style="background: #d4edda; padding: 15px; border-radius: 8px; border: 1px solid #c3e6cb;">
+                            <h5 style="color: #155724; margin-bottom: 10px;">✅ Venta Encontrada</h5>
+                            <p><strong>ID Venta:</strong> ${venta.ID_Venta}</p>
+                            <p><strong>Fecha:</strong> ${fecha}</p>
+                            <p><strong>Total:</strong> $${parseFloat(venta.Total).toFixed(2)}</p>
+                            <p><strong>ID Cliente:</strong> ${venta.ID_Cliente}</p>
+                        </div>
+                    `;
+                } else {
+                    resultado.innerHTML = `
+                        <div style="background: #f8d7da; padding: 15px; border-radius: 8px; border: 1px solid #f5c6cb;">
+                            <h5 style="color: #721c24; margin-bottom: 10px;">❌ Venta No Encontrada</h5>
+                            <p>No se encontró una venta con el ID ${id}</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error buscando venta:', error);
+                showAlert('Error al buscar venta', 'danger');
+            }
+        }
 
         // Cargar dashboard al inicio
         window.onload = function() {

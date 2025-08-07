@@ -14,10 +14,16 @@ const config = {
         port: 3000,
         host: 'localhost',
         cors: {
-            origin: '*', // En producción, especificar dominios específicos
+            origin: '*',
             methods: ['GET', 'POST', 'PUT', 'DELETE'],
             allowedHeaders: ['Content-Type', 'Authorization']
         }
+    },
+    
+    // Configuración del Servidor Web
+    webServer: {
+        port: 8080,
+        host: 'localhost'
     },
     
     // Configuración de la API
@@ -28,7 +34,7 @@ const config = {
             clientes: '/clientes',
             ventas: '/ventas',
             proveedores: '/proveedores',
-            ropaTemporada: '/ropa_temporada'
+            estadisticas: '/estadisticas'
         }
     },
     
@@ -37,14 +43,6 @@ const config = {
         name: 'TiendaRopa',
         version: '1.0.0',
         description: 'Sistema de gestión para tienda de ropa'
-    },
-    
-    // Cliente de Prueba (para demostración)
-    demoClient: {
-        ID_Cliente: 1,
-        Nombre: 'Ana Pérez',
-        Telefono: '999-111-2233',
-        Correo: 'ana.perez@mail.com'
     }
 };
 

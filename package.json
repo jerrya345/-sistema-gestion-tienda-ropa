@@ -1,5 +1,34 @@
 {
+  "name": "sistema-gestion-tienda-ropa",
+  "version": "1.0.0",
+  "description": "Sistema completo de gestión para tienda de ropa con interfaz web moderna y base de datos MySQL",
+  "main": "servidor-web.js",
+  "scripts": {
+    "start": "node servidor-web.js",
+    "backend": "cd backend && npm start",
+    "dev": "concurrently \"npm run backend\" \"npm start\"",
+    "setup": "node crear-stored-procedures.js"
+  },
+  "keywords": [
+    "tienda",
+    "ropa",
+    "gestion",
+    "mysql",
+    "nodejs",
+    "express",
+    "web"
+  ],
+  "author": "Sistema de Gestión Tienda",
+  "license": "MIT",
   "dependencies": {
-    "cors": "^2.8.5"
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "mysql2": "^3.14.3"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=14.0.0"
   }
 }
