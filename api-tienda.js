@@ -2,9 +2,13 @@ const express = require('express');
 const mysql = require('mysql2');
 const cors = require('cors');
 const app = express();
-const port = process.env.PORT || 3001; // Puerto diferente para la API de tienda
+const port = process.env.PORT || 10000; // Puerto para Render
 
-app.use(cors());
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 
 // Configuración de la conexión a MySQL
@@ -18,10 +22,16 @@ const db = mysql.createConnection({
 
 db.connect((err) => {
   if (err) {
-    console.error('Error al conectar a la base de datos:', err);
+    console.error('❌ Error al conectar a la base de datos:', err);
+    console.error('🔧 Configuración actual:');
+    console.error('   Host:', process.env.DB_HOST || 'localhost');
+    console.error('   User:', process.env.DB_USER || 'root');
+    console.error('   Database:', process.env.DB_NAME || 'TiendaRopa');
+    console.error('   Port:', process.env.DB_PORT || 3306);
     return;
   }
   console.log('✅ API de Tienda conectada a la base de datos MySQL');
+  console.log('📊 Base de datos:', process.env.DB_NAME || 'TiendaRopa');
 });
 
 // ========================================
@@ -454,6 +464,17 @@ app.get('/api/health', (req, res) => {
     message: 'API de Tienda funcionando correctamente',
     timestamp: new Date().toISOString(),
     version: '1.0.0'
+  });
+});
+
+// 13.1. Test endpoint para verificar conexión
+app.get('/api/test', (req, res) => {
+  res.json({
+    success: true,
+    message: 'API funcionando',
+    timestamp: new Date().toISOString(),
+    env: process.env.NODE_ENV,
+    port: process.env.PORT
   });
 });
 
