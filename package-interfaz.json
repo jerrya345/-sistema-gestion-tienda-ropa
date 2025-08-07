@@ -1,0 +1,36 @@
+{
+  "name": "interfaz-api-tienda",
+  "version": "1.0.0",
+  "description": "Interfaz gráfica para la API de tienda de ropa",
+  "main": "servidor-interfaz.js",
+  "scripts": {
+    "start": "node servidor-interfaz.js",
+    "dev": "nodemon servidor-interfaz.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "interfaz",
+    "api",
+    "tienda",
+    "ropa",
+    "boutique",
+    "web",
+    "dashboard"
+  ],
+  "author": "Sistema de Gestión Tienda",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jerrya345/-sistema-gestion-tienda-ropa.git"
+  }
+} 
