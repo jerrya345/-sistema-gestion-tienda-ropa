@@ -457,6 +457,296 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+// ========================================
+// ENDPOINTS PARA EL PANEL DE ADMINISTRACIÓN
+// ========================================
+
+// 14. Obtener todos los clientes (para admin)
+app.get('/api/clientes', (req, res) => {
+  const sql = 'SELECT * FROM Clientes ORDER BY ID_Cliente DESC';
+  
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error('Error al obtener clientes:', err);
+      return res.status(500).json({ 
+        error: 'Error al obtener clientes',
+        message: 'No se pudieron cargar los clientes'
+      });
+    }
+    res.json(results);
+  });
+});
+
+// 15. Obtener cliente por ID
+app.get('/api/clientes/:id', (req, res) => {
+  const id = req.params.id;
+  const sql = 'SELECT * FROM Clientes WHERE ID_Cliente = ?';
+  
+  db.query(sql, [id], (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: 'Error al obtener cliente' });
+    }
+    if (results.length === 0) {
+      return res.status(404).json({ error: 'Cliente no encontrado' });
+    }
+    res.json(results[0]);
+  });
+});
+
+// 16. Registrar nuevo cliente
+app.post('/api/clientes', (req, res) => {
+  const { Nombre, Telefono, Correo } = req.body;
+  
+  if (!Nombre || !Telefono || !Correo) {
+    return res.status(400).json({ error: 'Todos los campos son requeridos' });
+  }
+  
+  const sql = 'INSERT INTO Clientes (Nombre, Telefono, Correo) VALUES (?, ?, ?)';
+  
+  db.query(sql, [Nombre, Telefono, Correo], (err, result) => {
+    if (err) {
+      console.error('Error al registrar cliente:', err);
+      return res.status(500).json({ error: 'Error al registrar cliente' });
+    }
+    res.json({ 
+      success: true, 
+      id: result.insertId,
+      message: 'Cliente registrado exitosamente' 
+    });
+  });
+});
+
+// 17. Eliminar cliente
+app.delete('/api/clientes/:id', (req, res) => {
+  const id = req.params.id;
+  const sql = 'DELETE FROM Clientes WHERE ID_Cliente = ?';
+  
+  db.query(sql, [id], (err, result) => {
+    if (err) {
+      return res.status(500).json({ error: 'Error al eliminar cliente' });
+    }
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Cliente no encontrado' });
+    }
+    res.json({ success: true, message: 'Cliente eliminado exitosamente' });
+  });
+});
+
+// 18. Obtener todos los productos (para admin)
+app.get('/api/productos/admin', (req, res) => {
+  const sql = `
+    SELECT 
+      p.*,
+      pr.Nombre AS Nombre_Proveedor
+    FROM Productos p
+    LEFT JOIN Proveedores pr ON p.ID_Proveedor = pr.ID_Proveedor
+    ORDER BY p.ID_Producto DESC
+  `;
+  
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error('Error al obtener productos:', err);
+      return res.status(500).json({ error: 'Error al obtener productos' });
+    }
+    res.json(results);
+  });
+});
+
+// 19. Registrar nuevo producto
+app.post('/api/productos', (req, res) => {
+  const { 
+    Nombre, Descripcion, Talla, Color, Precio, 
+    Marca, Tipo_Prenda, Temporada, Stock, ID_Proveedor 
+  } = req.body;
+  
+  if (!Nombre || !Talla || !Color || !Precio || !Marca || !Tipo_Prenda || !Temporada || !Stock || !ID_Proveedor) {
+    return res.status(400).json({ error: 'Todos los campos son requeridos' });
+  }
+  
+  const sql = `
+    INSERT INTO Productos (Nombre, Descripcion, Talla, Color, Precio, Marca, Tipo_Prenda, Temporada, Stock, ID_Proveedor) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `;
+  
+  db.query(sql, [Nombre, Descripcion, Talla, Color, Precio, Marca, Tipo_Prenda, Temporada, Stock, ID_Proveedor], (err, result) => {
+    if (err) {
+      console.error('Error al registrar producto:', err);
+      return res.status(500).json({ error: 'Error al registrar producto' });
+    }
+    res.json({ 
+      success: true, 
+      id: result.insertId,
+      message: 'Producto registrado exitosamente' 
+    });
+  });
+});
+
+// 20. Eliminar producto
+app.delete('/api/productos/:id', (req, res) => {
+  const id = req.params.id;
+  const sql = 'DELETE FROM Productos WHERE ID_Producto = ?';
+  
+  db.query(sql, [id], (err, result) => {
+    if (err) {
+      return res.status(500).json({ error: 'Error al eliminar producto' });
+    }
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Producto no encontrado' });
+    }
+    res.json({ success: true, message: 'Producto eliminado exitosamente' });
+  });
+});
+
+// 21. Obtener todos los proveedores
+app.get('/api/proveedores', (req, res) => {
+  const sql = 'SELECT * FROM Proveedores ORDER BY ID_Proveedor DESC';
+  
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error('Error al obtener proveedores:', err);
+      return res.status(500).json({ error: 'Error al obtener proveedores' });
+    }
+    res.json(results);
+  });
+});
+
+// 22. Obtener proveedor por ID
+app.get('/api/proveedores/:id', (req, res) => {
+  const id = req.params.id;
+  const sql = 'SELECT * FROM Proveedores WHERE ID_Proveedor = ?';
+  
+  db.query(sql, [id], (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: 'Error al obtener proveedor' });
+    }
+    if (results.length === 0) {
+      return res.status(404).json({ error: 'Proveedor no encontrado' });
+    }
+    res.json(results[0]);
+  });
+});
+
+// 23. Registrar nuevo proveedor
+app.post('/api/proveedores', (req, res) => {
+  const { Nombre, Telefono, Correo } = req.body;
+  
+  if (!Nombre || !Telefono || !Correo) {
+    return res.status(400).json({ error: 'Todos los campos son requeridos' });
+  }
+  
+  const sql = 'INSERT INTO Proveedores (Nombre, Telefono, Correo) VALUES (?, ?, ?)';
+  
+  db.query(sql, [Nombre, Telefono, Correo], (err, result) => {
+    if (err) {
+      console.error('Error al registrar proveedor:', err);
+      return res.status(500).json({ error: 'Error al registrar proveedor' });
+    }
+    res.json({ 
+      success: true, 
+      id: result.insertId,
+      message: 'Proveedor registrado exitosamente' 
+    });
+  });
+});
+
+// 24. Eliminar proveedor
+app.delete('/api/proveedores/:id', (req, res) => {
+  const id = req.params.id;
+  const sql = 'DELETE FROM Proveedores WHERE ID_Proveedor = ?';
+  
+  db.query(sql, [id], (err, result) => {
+    if (err) {
+      return res.status(500).json({ error: 'Error al eliminar proveedor' });
+    }
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Proveedor no encontrado' });
+    }
+    res.json({ success: true, message: 'Proveedor eliminado exitosamente' });
+  });
+});
+
+// 25. Obtener todas las ventas
+app.get('/api/ventas', (req, res) => {
+  const sql = `
+    SELECT v.*, c.Nombre AS Nombre_Cliente 
+    FROM Ventas v 
+    LEFT JOIN Clientes c ON v.ID_Cliente = c.ID_Cliente 
+    ORDER BY v.ID_Venta DESC
+  `;
+  
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error('Error al obtener ventas:', err);
+      return res.status(500).json({ error: 'Error al obtener ventas' });
+    }
+    res.json(results);
+  });
+});
+
+// 26. Obtener venta por ID
+app.get('/api/ventas/:id', (req, res) => {
+  const id = req.params.id;
+  const sql = `
+    SELECT v.*, c.Nombre AS Nombre_Cliente 
+    FROM Ventas v 
+    LEFT JOIN Clientes c ON v.ID_Cliente = c.ID_Cliente 
+    WHERE v.ID_Venta = ?
+  `;
+  
+  db.query(sql, [id], (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: 'Error al obtener venta' });
+    }
+    if (results.length === 0) {
+      return res.status(404).json({ error: 'Venta no encontrada' });
+    }
+    res.json(results[0]);
+  });
+});
+
+// 27. Registrar nueva venta
+app.post('/api/ventas', (req, res) => {
+  const { ID_Cliente, Total } = req.body;
+  
+  if (!ID_Cliente || !Total) {
+    return res.status(400).json({ error: 'ID de cliente y total son requeridos' });
+  }
+  
+  const sql = 'INSERT INTO Ventas (ID_Cliente, Total, Fecha) VALUES (?, ?, NOW())';
+  
+  db.query(sql, [ID_Cliente, Total], (err, result) => {
+    if (err) {
+      console.error('Error al registrar venta:', err);
+      return res.status(500).json({ error: 'Error al registrar venta' });
+    }
+    res.json({ 
+      success: true, 
+      id: result.insertId,
+      message: 'Venta registrada exitosamente' 
+    });
+  });
+});
+
+// 28. Obtener estadísticas del dashboard
+app.get('/api/estadisticas', (req, res) => {
+  const sql = `
+    SELECT 
+      (SELECT COUNT(*) FROM Clientes) as totalClientes,
+      (SELECT COUNT(*) FROM Productos) as totalProductos,
+      (SELECT COALESCE(SUM(Total), 0) FROM Ventas WHERE DATE(Fecha) = CURDATE()) as ventasHoy,
+      (SELECT COALESCE(SUM(Total), 0) FROM Ventas WHERE MONTH(Fecha) = MONTH(CURDATE()) AND YEAR(Fecha) = YEAR(CURDATE())) as ventasMes,
+      (SELECT COALESCE(SUM(Total), 0) FROM Ventas) as totalIngresos
+  `;
+  
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error('Error al obtener estadísticas:', err);
+      return res.status(500).json({ error: 'Error al obtener estadísticas' });
+    }
+    res.json(results[0]);
+  });
+});
+
 // 14. Documentación de la API
 app.get('/api/docs', (req, res) => {
   res.json({
@@ -475,7 +765,22 @@ app.get('/api/docs', (req, res) => {
       'GET /api/tienda/info': 'Obtener información de la tienda',
       'POST /api/clientes': 'Registrar un nuevo cliente',
       'POST /api/ordenes': 'Crear una orden de compra',
-      'GET /api/health': 'Verificar estado de la API'
+      'GET /api/health': 'Verificar estado de la API',
+      'GET /api/clientes': 'Obtener todos los clientes (para admin)',
+      'GET /api/clientes/:id': 'Obtener cliente por ID (para admin)',
+      'POST /api/clientes': 'Registrar nuevo cliente (para admin)',
+      'DELETE /api/clientes/:id': 'Eliminar cliente (para admin)',
+      'GET /api/productos/admin': 'Obtener todos los productos (para admin)',
+      'POST /api/productos': 'Registrar nuevo producto (para admin)',
+      'DELETE /api/productos/:id': 'Eliminar producto (para admin)',
+      'GET /api/proveedores': 'Obtener todos los proveedores (para admin)',
+      'GET /api/proveedores/:id': 'Obtener proveedor por ID (para admin)',
+      'POST /api/proveedores': 'Registrar nuevo proveedor (para admin)',
+      'DELETE /api/proveedores/:id': 'Eliminar proveedor (para admin)',
+      'GET /api/ventas': 'Obtener todas las ventas (para admin)',
+      'GET /api/ventas/:id': 'Obtener venta por ID (para admin)',
+      'POST /api/ventas': 'Registrar nueva venta (para admin)',
+      'GET /api/estadisticas': 'Obtener estadísticas del dashboard (para admin)'
     }
   });
 });
